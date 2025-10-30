@@ -1,0 +1,25 @@
+#!/bin/bash
+# Usage: ./caption 01 "Your new caption text"
+
+if [ "$#" -lt 2 ]; then
+    echo "Usage: $0 <file-base> <caption text>"
+    exit 1
+fi
+
+FILEBASE="$1"
+CAPTION="$2"
+MD_FILE="${FILEBASE}.md"
+
+if [ ! -f "$MD_FILE" ]; then
+    echo "Error: file '$MD_FILE' not found"
+    exit 2
+fi
+
+# Escape slashes in caption for sed
+ESCAPED_CAPTION=$(printf '%s\n' "$CAPTION" | sed 's/[\/&]/\\&/g')
+
+# Replace the caption line
+sed -i "s/^caption: .*/caption: '$ESCAPED_CAPTION'/" "$MD_FILE"
+
+echo "Updated caption in $MD_FILE"
+
